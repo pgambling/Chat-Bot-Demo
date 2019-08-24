@@ -1,0 +1,81 @@
+service: twitter-bot
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  profile: personal
+  runtime: nodejs10.x
+  environment:
+    TWITTER_CONSUMER_API_KEY: ${self:custom.environment.TWITTER_CONSUMER_API_KEY}
+    TWITTER_CONSUMER_API_SECRET_KEY: ${self:custom.environment.TWITTER_CONSUMER_API_SECRET_KEY}
+    TWITTER_ACCESS_TOKEN: ${self:custom.environment.TWITTER_ACCESS_TOKEN}
+    TWITTER_ACCESS_TOKEN_SECRET: ${self:custom.environment.TWITTER_ACCESS_TOKEN_SECRET}
+    TWITTER_URL_BASE: ${self:custom.environment.TWITTER_URL_BASE}
+    TWITTER_BOT_USER_ID: ${self:custom.environment.TWITTER_BOT_USER_ID}
+    APP_ROOT_URL: ${self:custom.environment.API_ROOT_URL}
+    ENV_NAME: ${self:custom.stage}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - "sns:Publish"
+      Resource:
+        - ${self:custom.twitterMsgTopic}
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  stage: dev
+  environment: ${file(env.yml):${self:custom.stage}, file(env.yml):dev}
+  customDomain:
+    domainName: grwi.net
+    certificateArn: arn:aws:acm:us-east-1:578681038652:certificate/1694088c-d974-475c-b2b3-dfd3e4e95b6d
+    basePath: ''
+    stage: ${self:custom.stage}
+    createRoute53Record: true
+  twitterMsgTopic:
+    Fn::Join:
+      - ":"
+      - - arn
+        - aws
+        - sns
+        - Ref: AWS::Region
+        - Ref: AWS::AccountId
+        - twitterMessages    
+
+functions:
+  twitter-crc-check:
+    handler: lambdas/twitter/crc-check.handler
+    events:
+      - http:
+          path: twitter/webhook
+          method: get
+          request:
+            parameters:
+              querystrings:
+                crc_token: true
+
+  twitter-register-webhook:
+    handler: lambdas/twitter/register-webhook.handler
+    environment:
+      WEBHOOK_URL: "${self:custom.environment.APP_ROOT_URL}/twitter/webhook"
+
+  twitter-register-subscription:
+    handler: lambdas/twitter/register-subscription.handler
+
+  twitter-events-webhook:
+    handler: lambdas/twitter/events-webhook.handler
+    environment:
+      TWITTER_MSG_TOPIC: ${self:custom.twitterMsgTopic}
+    events:
+      - http:
+          path: twitter/webhook
+          method: post   
+  
+  twitter-message-consumer:
+    handler: lambdas/twitter/message-consumer.handler
+    events:
+      - sns:
+          topicName: twitterMessages
+          displayName: Twitter Direct Messages

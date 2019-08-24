@@ -1,0 +1,8 @@
+dev:
+  TWITTER_CONSUMER_API_KEY: "######"
+  TWITTER_CONSUMER_API_SECRET_KEY: "######"
+  TWITTER_ACCESS_TOKEN: "######"
+  TWITTER_ACCESS_TOKEN_SECRET: "######"
+  TWITTER_URL_BASE: 'https://api.twitter.com/1.1'
+  APP_ROOT_URL: 'https://example.com'
+  TWITTER_BOT_USER_ID: "######"

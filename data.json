@@ -1,0 +1,137 @@
+{
+  "resource": "/twitter/webhook",
+  "path": "/twitter/webhook",
+  "httpMethod": "POST",
+  "headers": {
+      "CloudFront-Forwarded-Proto": "https",
+      "CloudFront-Is-Desktop-Viewer": "true",
+      "CloudFront-Is-Mobile-Viewer": "false",
+      "CloudFront-Is-SmartTV-Viewer": "false",
+      "CloudFront-Is-Tablet-Viewer": "false",
+      "CloudFront-Viewer-Country": "US",
+      "Content-Type": "application/json",
+      "Finagle-Ctx-com.twitter.finagle.Deadline": "1566085452178000000 1566085455160000000",
+      "Finagle-Ctx-com.twitter.finagle.Retries": "0",
+      "finagle-http-retryable-request": "",
+      "Host": "grwi.net",
+      "Via": "1.1 69cb2350f7d768be8f0e47290ff2670e.cloudfront.net (CloudFront)",
+      "X-Amz-Cf-Id": "4u1PIB_mRPwasIcua-dbRB0TTG8LhD4D8Vv0VglzU52BErEvDCqU9w==",
+      "X-Amzn-Trace-Id": "Root=1-5d58914c-dcfd79178625ce7c9071f33b",
+      "X-B3-Flags": "2",
+      "X-B3-ParentSpanId": "804a5963f46d4607",
+      "X-B3-Sampled": "false",
+      "X-B3-SpanId": "009acd1ae794db91",
+      "X-B3-TraceId": "804a5963f46d4607",
+      "X-Forwarded-For": "199.16.157.173, 54.239.170.45",
+      "X-Forwarded-Port": "443",
+      "X-Forwarded-Proto": "https",
+      "X-Twitter-Webhooks-Signature": "sha256=srw7630FxsAjQi+I3IRgaXlpnHHjj1y8RXAtVeS+WjE="
+  },
+  "multiValueHeaders": {
+      "CloudFront-Forwarded-Proto": [
+          "https"
+      ],
+      "CloudFront-Is-Desktop-Viewer": [
+          "true"
+      ],
+      "CloudFront-Is-Mobile-Viewer": [
+          "false"
+      ],
+      "CloudFront-Is-SmartTV-Viewer": [
+          "false"
+      ],
+      "CloudFront-Is-Tablet-Viewer": [
+          "false"
+      ],
+      "CloudFront-Viewer-Country": [
+          "US"
+      ],
+      "Content-Type": [
+          "application/json"
+      ],
+      "Finagle-Ctx-com.twitter.finagle.Deadline": [
+          "1566085452178000000 1566085455160000000"
+      ],
+      "Finagle-Ctx-com.twitter.finagle.Retries": [
+          "0"
+      ],
+      "finagle-http-retryable-request": [
+          ""
+      ],
+      "Host": [
+          "grwi.net"
+      ],
+      "Via": [
+          "1.1 69cb2350f7d768be8f0e47290ff2670e.cloudfront.net (CloudFront)"
+      ],
+      "X-Amz-Cf-Id": [
+          "4u1PIB_mRPwasIcua-dbRB0TTG8LhD4D8Vv0VglzU52BErEvDCqU9w=="
+      ],
+      "X-Amzn-Trace-Id": [
+          "Root=1-5d58914c-dcfd79178625ce7c9071f33b"
+      ],
+      "X-B3-Flags": [
+          "2"
+      ],
+      "X-B3-ParentSpanId": [
+          "804a5963f46d4607"
+      ],
+      "X-B3-Sampled": [
+          "false"
+      ],
+      "X-B3-SpanId": [
+          "009acd1ae794db91"
+      ],
+      "X-B3-TraceId": [
+          "804a5963f46d4607"
+      ],
+      "X-Forwarded-For": [
+          "199.16.157.173, 54.239.170.45"
+      ],
+      "X-Forwarded-Port": [
+          "443"
+      ],
+      "X-Forwarded-Proto": [
+          "https"
+      ],
+      "X-Twitter-Webhooks-Signature": [
+          "sha256=srw7630FxsAjQi+I3IRgaXlpnHHjj1y8RXAtVeS+WjE="
+      ]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+      "resourceId": "ci3w47",
+      "resourcePath": "/twitter/webhook",
+      "httpMethod": "POST",
+      "extendedRequestId": "eluj6GvyIAMFVxA=",
+      "requestTime": "17/Aug/2019:23:44:12 +0000",
+      "path": "/twitter/webhook",
+      "accountId": "578681038652",
+      "protocol": "HTTP/1.1",
+      "stage": "dev",
+      "domainPrefix": "grwi",
+      "requestTimeEpoch": 1566085452218,
+      "requestId": "ea2db22c-c148-11e9-a72c-4d9829033f6d",
+      "identity": {
+          "cognitoIdentityPoolId": null,
+          "accountId": null,
+          "cognitoIdentityId": null,
+          "caller": null,
+          "sourceIp": "199.16.157.173",
+          "principalOrgId": null,
+          "accessKey": null,
+          "cognitoAuthenticationType": null,
+          "cognitoAuthenticationProvider": null,
+          "userArn": null,
+          "userAgent": null,
+          "user": null
+      },
+      "domainName": "grwi.net",
+      "apiId": "nisnv0vhu5"
+  },
+  "body": "{\"for_user_id\":\"1146259878618513408\",\"follow_events\":[{\"type\":\"unfollow\",\"created_timestamp\":\"1566085452097\",\"target\":{\"id\":\"1146259878618513408\",\"default_profile_image\":false,\"profile_background_image_url\":\"\",\"friends_count\":1,\"favourites_count\":0,\"profile_link_color\":-1,\"profile_background_image_url_https\":\"\",\"utc_offset\":0,\"screen_name\":\"TweetAtRalph\",\"is_translator\":false,\"followers_count\":1,\"name\":\"Ralph Wiggum\",\"lang\":\"\",\"profile_use_background_image\":false,\"created_at\":\"Wed Jul 03 03:30:26 +0000 2019\",\"profile_text_color\":-1,\"notifications\":false,\"protected\":false,\"statuses_count\":0,\"url\":\"\",\"contributors_enabled\":false,\"default_profile\":true,\"profile_sidebar_border_color\":-1,\"time_zone\":\"\",\"geo_enabled\":false,\"verified\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/1146260268802039816\\/qzDgjk5H_normal.jpg\",\"following\":false,\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/1146260268802039816\\/qzDgjk5H_normal.jpg\",\"profile_background_tile\":false,\"listed_count\":0,\"profile_sidebar_fill_color\":-1,\"location\":\"\",\"follow_request_sent\":false,\"description\":\"My cat's breath smells like cat food.\",\"profile_background_color\":-1},\"source\":{\"id\":\"23514314\",\"default_profile_image\":false,\"profile_background_image_url\":\"\",\"friends_count\":161,\"favourites_count\":203,\"profile_link_color\":-1,\"profile_background_image_url_https\":\"\",\"utc_offset\":0,\"screen_name\":\"pmhg\",\"is_translator\":false,\"followers_count\":182,\"name\":\"Phil Gambling\",\"lang\":\"\",\"profile_use_background_image\":false,\"created_at\":\"Mon Mar 09 22:26:52 +0000 2009\",\"profile_text_color\":-1,\"notifications\":false,\"protected\":false,\"statuses_count\":1269,\"url\":\"\",\"contributors_enabled\":false,\"default_profile\":true,\"profile_sidebar_border_color\":-1,\"time_zone\":\"\",\"geo_enabled\":false,\"verified\":false,\"profile_image_url\":\"http:\\/\\/pbs.twimg.com\\/profile_images\\/95154712\\/phil_normal.jpg\",\"following\":false,\"profile_image_url_https\":\"https:\\/\\/pbs.twimg.com\\/profile_images\\/95154712\\/phil_normal.jpg\",\"profile_background_tile\":false,\"listed_count\":5,\"profile_sidebar_fill_color\":-1,\"location\":\"Houston, TX\",\"follow_request_sent\":false,\"description\":\"Software developer at @experoinc, father, husband, and technology nerd. I build user interfaces all day.\",\"profile_background_color\":-1}}]}",
+  "isBase64Encoded": false
+}
