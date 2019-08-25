@@ -2,7 +2,7 @@ const { followUser, unfollowUser, FOLLOW_EVENT_TYPE, UNFOLLOW_EVENT_TYPE } = req
 const AWS = require('aws-sdk')
 const sns = new AWS.SNS()
 
-const TWITTER_MSG_TOPIC = process.env.TWITTER_MSG_TOPIC;
+const { TWITTER_MSG_TOPIC } = process.env;
 
 async function processFollowEvents(body) {
   const followEvents = body.follow_events || [];
