@@ -1,6 +1,6 @@
 const { followUser, unfollowUser, FOLLOW_EVENT_TYPE, UNFOLLOW_EVENT_TYPE } = require('../twitter-api');
-const AWS = require('aws-sdk')
-const sns = new AWS.SNS()
+const AWS = require('aws-sdk');
+const sns = new AWS.SNS();
 
 const { TWITTER_MSG_TOPIC } = process.env;
 

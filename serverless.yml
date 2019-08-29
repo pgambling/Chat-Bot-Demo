@@ -97,3 +97,10 @@ functions:
       - sns:
           topicName: twitterMessages
           displayName: Twitter Direct Messages
+
+  telegram-webhook:
+    handler: lambdas/telegram/webhook.handler
+    events:
+      - http:
+          path: telegram/webhook
+          method: post   
