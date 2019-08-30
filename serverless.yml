@@ -39,4 +39,4 @@ functions:
     events:
       - http:
           path: telegram/webhook
-          method: post   
+          method: post
