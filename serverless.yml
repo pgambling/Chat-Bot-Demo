@@ -28,6 +28,11 @@ provider:
         - "lex:PostText"
       Resource:
         - ${self:custom.lexBotArn}
+    - Effect: 'Allow'
+      Action:
+        - "translate:TranslateText"
+        - "comprehend:DetectDominantLanguage" 
+      Resource: "*"         
 
 plugins:
   - serverless-domain-manager
@@ -103,4 +108,7 @@ functions:
     events:
       - http:
           path: telegram/webhook
-          method: post   
+          method: post
+
+  translate:
+    handler: lambdas/lex/translate.handler
