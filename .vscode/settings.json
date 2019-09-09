@@ -1,0 +1,46 @@
+{
+  "search.useIgnoreFiles": true,
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.log": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/build": false,
+    "**/dist": false,
+    "**/hint-report": true,
+    "**/.cache": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/hint-report": true,
+    "**/.cache": true,
+    "yarn.lock": true,
+    "*.log": true
+  },
+  "tslint.autoFixOnSave": true,
+  "eslint.autoFixOnSave": true,
+  "material-icon-theme.files.associations": {
+    "*.test.tsx.snap": "sublime",
+    "*.test.ts.snap": "sublime",
+    "*.snap": "sublime",
+    "*.storyshot": "sublime"
+  },
+  "files.associations": {
+    "*.snap": "xml",
+    "*.storyshot": "xml"
+  },
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "tslint.packageManager": "yarn",
+  "eslint.packageManager": "yarn",
+  "prettier.tslintIntegration": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
