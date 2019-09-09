@@ -18,21 +18,21 @@ provider:
     LEX_BOT_ALIAS: ${self:custom.environment.LEX_BOT_ALIAS}
     LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
   iamRoleStatements:
-    - Effect: 'Allow'
+    - Effect: "Allow"
       Action:
         - "sns:Publish"
       Resource:
         - ${self:custom.twitterMsgTopic}
-    - Effect: 'Allow'
+    - Effect: "Allow"
       Action:
         - "lex:PostText"
       Resource:
         - ${self:custom.lexBotArn}
-    - Effect: 'Allow'
+    - Effect: "Allow"
       Action:
         - "translate:TranslateText"
-        - "comprehend:DetectDominantLanguage" 
-      Resource: "*"         
+        - "comprehend:DetectDominantLanguage"
+      Resource: "*"
 
 plugins:
   - serverless-domain-manager
@@ -43,7 +43,7 @@ custom:
   customDomain:
     domainName: grwi.net
     certificateArn: arn:aws:acm:us-east-1:578681038652:certificate/1694088c-d974-475c-b2b3-dfd3e4e95b6d
-    basePath: ''
+    basePath: ""
     stage: ${self:custom.stage}
     createRoute53Record: true
   twitterMsgTopic:
@@ -94,8 +94,8 @@ functions:
     events:
       - http:
           path: twitter/webhook
-          method: post   
-  
+          method: post
+
   twitter-message-consumer:
     handler: lambdas/twitter/message-consumer.handler
     events:
@@ -112,3 +112,6 @@ functions:
 
   translate:
     handler: lambdas/lex/translate.handler
+
+  meme-generator:
+    handler: lambdas/lex/meme-generator.handler
