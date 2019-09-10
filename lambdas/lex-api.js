@@ -1,7 +1,7 @@
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 
 async function sendTextToLexBot(userId, inputText) {
-  console.log('Sending message to Lex');
+  console.log("Sending message to Lex");
   try {
     const params = {
       botAlias: process.env.LEX_BOT_ALIAS,
@@ -9,15 +9,15 @@ async function sendTextToLexBot(userId, inputText) {
       inputText,
       userId
     };
-    
+
     const lex = new AWS.LexRuntime();
     const response = await lex.postText(params).promise();
-    console.log('Got a response from Lex bot');
+    console.log("Got a response from Lex bot");
     console.log(response);
 
-    return response.message;
+    return response;
   } catch (err) {
-    console.error('Failed to get response from Lex');
+    console.error("Failed to get response from Lex");
     console.error(err);
   }
 }

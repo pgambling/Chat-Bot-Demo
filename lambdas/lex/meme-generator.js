@@ -1,4 +1,13 @@
-const { elicitSlot, confirmIntent, delegate } = require("./lex-helpers");
+const {
+  elicitSlot,
+  confirmIntent,
+  delegate,
+  close,
+  plainTextMessage,
+  imageResponseCard
+} = require("./lex-helpers");
+
+const { searchForMeme, createMeme } = require("../meme-api");
 
 function dialogCodeHook(event) {
   let slots = { ...(event.currentIntent.slots || {}) };
@@ -57,15 +66,37 @@ function dialogCodeHook(event) {
 module.exports.handler = async event => {
   console.log(JSON.stringify(event));
 
+  // handle initialization and validation events
   if (event.invocationSource === "DialogCodeHook") return dialogCodeHook(event);
 
-  // TODOO: Fullfillment
-  const response = {
-    dialogAction: {
-      type: "Close",
-      fulfillmentState: "Fulfilled"
-    }
-  };
+  // Fulfillment
+  const { memeName, topText, bottomText } = event.currentIntent.slots;
 
-  return response;
+  const meme = await searchForMeme(memeName);
+
+  if (!meme) {
+    // Handle no match
+    // TODO: Suggest alternatives?
+    return close(event, {
+      fulfillmentState: "Failed",
+      message: plainTextMessage(
+        `I'm sorry, but I couldn't find a meme that matched ${memeName}`
+      )
+    });
+  }
+
+  const imgUrl = await createMeme(meme.id, topText, bottomText);
+
+  if (!imgUrl) {
+    return close(event, {
+      fulfillmentState: "Failed",
+      message: plainTextMessage("Something went wrong...")
+    });
+  }
+
+  return close(event, {
+    fulfillmentState: "Fulfilled",
+    message: plainTextMessage("Here you go"),
+    responseCard: imageResponseCard(imgUrl)
+  });
 };

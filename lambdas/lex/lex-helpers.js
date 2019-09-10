@@ -5,6 +5,18 @@ function plainTextMessage(message) {
   };
 }
 
+function imageResponseCard(imageUrl) {
+  return {
+    version: 1,
+    contentType: "application/vnd.amazonaws.card.generic",
+    genericAttachments: [
+      {
+        imageUrl
+      }
+    ]
+  };
+}
+
 function createLexResponse(inputEvent, dialogActionArgs) {
   return {
     dialogAction: {
@@ -37,8 +49,22 @@ function delegate(inputEvent) {
   return response;
 }
 
+function close(inputEvent, closeArgs) {
+  const response = createLexResponse(inputEvent, {
+    ...closeArgs,
+    type: "Close"
+  });
+
+  delete response.dialogAction.intentName; // for some reason Lex doesn't want intentName set on close responses
+
+  return response;
+}
+
 module.exports = {
   elicitSlot,
   confirmIntent,
-  delegate
+  delegate,
+  close,
+  plainTextMessage,
+  imageResponseCard
 };

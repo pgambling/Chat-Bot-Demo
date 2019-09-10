@@ -17,6 +17,9 @@ provider:
     ENV_NAME: ${self:custom.stage}
     LEX_BOT_ALIAS: ${self:custom.environment.LEX_BOT_ALIAS}
     LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
+    IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
+    IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
+
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -115,3 +118,6 @@ functions:
 
   meme-generator:
     handler: lambdas/lex/meme-generator.handler
+    environment:
+      IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
+      IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
