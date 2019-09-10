@@ -65,7 +65,7 @@ exports.handler = async function(event) {
     console.log(`Received "${text}" from ${from.username} in chat ${chat.id}`);
 
     // concatenating the user and chat ids so Lex can distinguish between seperate conversations
-    const senderId = `${from.id}-${chat.id}`;
+    const senderId = `telegram-${from.id}-${chat.id}`;
     const lexReply = await sendTextToLexBot(senderId, text);
 
     return convertLexReplyToTelegram(chat.id, lexReply);

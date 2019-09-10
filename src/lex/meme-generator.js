@@ -6,10 +6,11 @@ const {
   plainTextMessage,
   imageResponseCard
 } = require("./lex-helpers");
+const { getUser, updateUser } = require("../db");
 
 const { searchForMeme, createMeme } = require("../meme-api");
 
-function dialogCodeHook(event) {
+async function dialogCodeHook(event) {
   let slots = { ...(event.currentIntent.slots || {}) };
 
   const confirmationStatus = event.currentIntent.confirmationStatus;
@@ -63,12 +64,7 @@ function dialogCodeHook(event) {
   return response;
 }
 
-module.exports.handler = async event => {
-  console.log(JSON.stringify(event));
-
-  // handle initialization and validation events
-  if (event.invocationSource === "DialogCodeHook") return dialogCodeHook(event);
-
+async function fulfillment(event) {
   // Fulfillment
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
@@ -94,9 +90,27 @@ module.exports.handler = async event => {
     });
   }
 
+  // store the last 30 memes created
+  const user = (await getUser(event.userId)) || {
+    memes: [],
+    created: Date.now()
+  };
+  console.log(`Current user ${JSON.stringify(user)}`);
+  user.memes = [{ imgUrl, created: Date.now() }, ...user.memes.slice(0, 4)];
+  user.updated = Date.now();
+  console.log(`Updated user ${JSON.stringify(user)}`);
+  await updateUser(event.userId, user);
+
   return close(event, {
     fulfillmentState: "Fulfilled",
     message: plainTextMessage("Here you go"),
     responseCard: imageResponseCard(imgUrl)
   });
+}
+
+module.exports.handler = async event => {
+  console.log(JSON.stringify(event));
+  return (await event.invocationSource) === "DialogCodeHook"
+    ? dialogCodeHook(event)
+    : fulfillment(event);
 };
