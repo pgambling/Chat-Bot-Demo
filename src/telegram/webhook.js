@@ -54,6 +54,7 @@ exports.handler = async function(event) {
     if (!text || text === "/start") return NO_OP_RESPONSE; // TODO: Respond to /start
 
     if (forward_date && text) {
+      // attempt translate forwarded messages
       console.log(
         `Received forwarded message "${text}" from ${from.username} in chat ${chat.id}`
       );

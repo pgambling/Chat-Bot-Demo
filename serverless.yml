@@ -19,7 +19,7 @@ provider:
     LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
     IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
     IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
-
+    DYNAMODB_TABLE: ${self:service}-${self:custom.stage}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -36,6 +36,15 @@ provider:
         - "translate:TranslateText"
         - "comprehend:DetectDominantLanguage"
       Resource: "*"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 plugins:
   - serverless-domain-manager
@@ -72,7 +81,7 @@ custom:
 
 functions:
   twitter-crc-check:
-    handler: lambdas/twitter/crc-check.handler
+    handler: src/twitter/crc-check.handler
     events:
       - http:
           path: twitter/webhook
@@ -83,15 +92,15 @@ functions:
                 crc_token: true
 
   twitter-register-webhook:
-    handler: lambdas/twitter/register-webhook.handler
+    handler: src/twitter/register-webhook.handler
     environment:
       WEBHOOK_URL: "${self:custom.environment.APP_ROOT_URL}/twitter/webhook"
 
   twitter-register-subscription:
-    handler: lambdas/twitter/register-subscription.handler
+    handler: src/twitter/register-subscription.handler
 
   twitter-events-webhook:
-    handler: lambdas/twitter/events-webhook.handler
+    handler: src/twitter/events-webhook.handler
     environment:
       TWITTER_MSG_TOPIC: ${self:custom.twitterMsgTopic}
     events:
@@ -100,24 +109,41 @@ functions:
           method: post
 
   twitter-message-consumer:
-    handler: lambdas/twitter/message-consumer.handler
+    handler: src/twitter/message-consumer.handler
     events:
       - sns:
           topicName: twitterMessages
           displayName: Twitter Direct Messages
 
   telegram-webhook:
-    handler: lambdas/telegram/webhook.handler
+    handler: src/telegram/webhook.handler
     events:
       - http:
           path: telegram/webhook
           method: post
 
   translate:
-    handler: lambdas/lex/translate.handler
+    handler: src/lex/translate.handler
 
   meme-generator:
-    handler: lambdas/lex/meme-generator.handler
+    handler: src/lex/meme-generator.handler
     environment:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
+
+resources:
+  Resources:
+    ChatUsersDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
