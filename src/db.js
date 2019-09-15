@@ -22,7 +22,7 @@ function updateUser(id, data) {
     }
   };
 
-  dynamodb.put(params).promise();
+  return dynamodb.put(params).promise();
 }
 
 module.exports = { getUser, updateUser };
