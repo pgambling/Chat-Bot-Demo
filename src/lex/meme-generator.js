@@ -65,7 +65,6 @@ async function dialogCodeHook(event) {
 }
 
 async function fulfillment(event) {
-  // Fulfillment
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
   const meme = await searchForMeme(memeName);

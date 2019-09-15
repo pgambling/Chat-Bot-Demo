@@ -131,6 +131,9 @@ functions:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
 
+  meme-lookup:
+    handler: src/lex/meme-lookup.handler
+
 resources:
   Resources:
     ChatUsersDynamoDbTable:
