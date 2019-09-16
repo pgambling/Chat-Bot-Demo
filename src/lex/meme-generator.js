@@ -1,62 +1,36 @@
 const {
   elicitSlot,
-  confirmIntent,
   delegate,
   close,
   plainTextMessage,
   imageResponseCard
 } = require("./lex-helpers");
 const { getUser, updateUser } = require("../db");
-
 const { searchForMeme, createMeme } = require("../meme-api");
 
 async function dialogCodeHook(event) {
-  let slots = { ...(event.currentIntent.slots || {}) };
+  const slots = event.currentIntent.slots || {};
+  const { memeName, textPlacement, topText, bottomText } = slots;
 
-  const confirmationStatus = event.currentIntent.confirmationStatus;
-  let answeredIncludeTopText = slots.includeTopText != null;
-  let answeredIncludeBottomText = slots.includeBottomText != null;
-
-  // check if the user is responding to a confirmation question
-  if (confirmationStatus !== "None") {
-    const isConfirmed = confirmationStatus === "Confirmed" ? "yes" : "no";
-    // manually setting the yes/no question answers with confirmation status because it handles a larger sample of
-    // answers to a yes/no question then using custom slot type
-    if (!answeredIncludeTopText) {
-      slots.includeTopText = isConfirmed;
-      answeredIncludeTopText = true;
-    } else if (!answeredIncludeBottomText) {
-      slots.includeBottomText = isConfirmed;
-      answeredIncludeBottomText = true;
-    }
-  }
-
-  const {
-    memeName,
-    includeTopText,
-    topText,
-    includeBottomText,
-    bottomText
-  } = slots;
+  // TODO: Validate memeName exists
 
   let response;
-  if (
-    memeName &&
-    (includeTopText === "no" || topText) &&
-    (includeBottomText === "no" || bottomText)
-  ) {
-    // Delegate back to Lex once all the required slots are filled
+  if (!memeName || !textPlacement) {
+    // prompt for meme name and text placement before asking user for text
     response = delegate(event);
-  } else if (!memeName) {
-    response = elicitSlot(event, "memeName");
-  } else if (!answeredIncludeTopText) {
-    response = confirmIntent(event, "Do you want to include text on top?");
-  } else if (includeTopText === "yes" && !topText) {
+  } else if (
+    !topText &&
+    (textPlacement === "both" || textPlacement === "top")
+  ) {
     response = elicitSlot(event, "topText");
-  } else if (!answeredIncludeBottomText) {
-    response = confirmIntent(event, "Do you want to include text on bottom?");
-  } else if (includeBottomText === "yes" && !bottomText) {
+  } else if (
+    !bottomText &&
+    (textPlacement === "both" || textPlacement === "bottom")
+  ) {
     response = elicitSlot(event, "bottomText");
+  } else {
+    // all slots filled in
+    response = delegate(event);
   }
 
   response.dialogAction.slots = slots;
@@ -71,7 +45,7 @@ async function fulfillment(event) {
 
   if (!meme) {
     // Handle no match
-    // TODO: Suggest alternatives?
+    // TODO: Suggest alternatives? Move this to validation
     return close(event, {
       fulfillmentState: "Failed",
       message: plainTextMessage(
