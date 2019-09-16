@@ -26,14 +26,23 @@ function convertLexReplyToTelegram(chatId, lexReply) {
   const { message, responseCard } = lexReply;
 
   if (message && responseCard) {
-    // Naively assuming image response card right now (should probably create a custom return type)
-    // also just merging the closing message and image together, but will need to be able to respond with multiple images
-    responseBody.method = "sendPhoto";
-    responseBody.photo = responseCard.genericAttachments[0].imageUrl;
-    responseBody.caption = message;
+    const { imageUrl, buttons } = responseCard.genericAttachments[0] || {};
+    if (imageUrl) {
+      responseBody.method = "sendPhoto";
+      responseBody.photo = imageUrl;
+      responseBody.caption = message;
+    } else if (buttons && buttons.length > 0) {
+      responseBody.method = "sendMessage";
+      responseBody.text = message;
+      responseBody.reply_markup = {
+        keyboard: [buttons.map(b => ({ text: b.text }))],
+        one_time_keyboard: true
+      };
+    }
   } else {
     responseBody.method = "sendMessage";
     responseBody.text = message;
+    responseBody.reply_markup = { remove_keyboard: true };
   }
 
   return {
@@ -68,7 +77,10 @@ exports.handler = async function(event) {
     const senderId = `telegram-${from.id}-${chat.id}`;
     const lexReply = await sendTextToLexBot(senderId, text);
 
-    return convertLexReplyToTelegram(chat.id, lexReply);
+    const telegramResponse = convertLexReplyToTelegram(chat.id, lexReply);
+    console.log("Sending response to telegram");
+    console.log(JSON.stringify(telegramResponse));
+    return telegramResponse;
   } catch (err) {
     // return something in case of error so Telegram doesn't keep sending the same update
     return message(chat.id, "I don't feel right");
