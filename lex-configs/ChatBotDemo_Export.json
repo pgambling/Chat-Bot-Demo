@@ -1,0 +1,357 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "ChatBotDemo",
+    "version": "10",
+    "intents": [
+      {
+        "name": "FAQEventDate",
+        "version": "2",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "When is JS Day",
+          "When is JS Day Canarias",
+          "What are the dates for JS Day",
+          "When does the conference happen",
+          "When is the conference",
+          "What is the date for JS Day",
+          "What time is the event"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "groupNumber": 1,
+              "contentType": "PlainText",
+              "content": "Friday November 8 through Sunday November 10 2019"
+            },
+            {
+              "groupNumber": 1,
+              "contentType": "PlainText",
+              "content": "November 8 to 10"
+            }
+          ]
+        }
+      },
+      {
+        "rejectionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "oops"
+            }
+          ]
+        },
+        "name": "FlightStatus",
+        "version": "11",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "Look up flight information",
+          "I want to look up a flight",
+          "When does {airline} fight {number} on {date} arrive",
+          "When does {airline} {number} arrive",
+          "Help me look up a flight",
+          "When does my flight arrive"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.Airline",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which airline?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "airline"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.DATE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What date?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 4,
+            "name": "date"
+          },
+          {
+            "sampleUtterances": [
+              "it's {number}"
+            ],
+            "slotType": "AMAZON.NUMBER",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is the flight number?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\"}",
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "number"
+          }
+        ],
+        "confirmationPrompt": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "You asked me to look up {airline} {number} on {date}, is that correct?"
+            }
+          ],
+          "maxAttempts": 3
+        },
+        "conclusionStatement": {
+          "messages": [
+            {
+              "groupNumber": 1,
+              "contentType": "PlainText",
+              "content": "I'm on it!"
+            }
+          ]
+        }
+      },
+      {
+        "name": "MemeGenerator",
+        "version": "19",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:578681038652:function:twitter-bot-dev-meme-generator",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "I want to make a meme",
+          "I want to generate a meme",
+          "generate a meme",
+          "make me a meme",
+          "make me a meme using {memeName}",
+          "make a meme with {memeName}",
+          "make a meme about {memeName}",
+          "make a meme from {memeName}",
+          "make a {memeName} meme with text on {textPlacement}",
+          "make a {memeName} meme",
+          "I want a meme",
+          "I want a {memeName} meme"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.Book",
+            "slotConstraint": "Optional",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What do you want to write on bottom?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 6,
+            "name": "bottomText"
+          },
+          {
+            "sampleUtterances": [
+              "I want to use {memeName}",
+              "I want {memeName}"
+            ],
+            "slotType": "AMAZON.Book",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What meme do you want to use?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\"}",
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "memeName"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "MemeTextPlacement",
+            "slotTypeVersion": "1",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Do you want text on the top or bottom?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"title\":\"\",\"buttons\":[{\"text\":\"both\",\"value\":\"both\"},{\"text\":\"top only\",\"value\":\"top\"},{\"text\":\"bottom only\",\"value\":\"bottom\"}]}]}",
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "textPlacement"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.Book",
+            "slotConstraint": "Optional",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What do you want to write on top?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "topText"
+          }
+        ],
+        "dialogCodeHook": {
+          "uri": "arn:aws:lambda:us-east-1:578681038652:function:twitter-bot-dev-meme-generator",
+          "messageVersion": "1.0"
+        }
+      },
+      {
+        "name": "MemeLookup",
+        "version": "2",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:578681038652:function:twitter-bot-dev-meme-lookup",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "Show me my last {requestedNumber} memes",
+          "What are my last {requestedNumber} memes",
+          "What memes have I created",
+          "Get my last {requestedNumber} memes"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.NUMBER",
+            "slotConstraint": "Optional",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "How many?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "requestedNumber"
+          }
+        ]
+      },
+      {
+        "name": "FAQEventLocation",
+        "version": "4",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "Where is JS Day Canarias",
+          "Where is the conference",
+          "Where is the event",
+          "How do I get to the event",
+          "What is the address for the conference",
+          "How do I get to JS Day"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "groupNumber": 1,
+              "contentType": "PlainText",
+              "content": "Physics and Mathematics Building, Univesity of La Laguna, Astrofísico Francisco Sánchez Av., San Cristóbal de La Laguna"
+            }
+          ]
+        }
+      }
+    ],
+    "slotTypes": [
+      {
+        "name": "MemeTextPlacement",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "top",
+            "synonyms": [
+              "top only"
+            ]
+          },
+          {
+            "value": "bottom",
+            "synonyms": [
+              "bottom only"
+            ]
+          },
+          {
+            "value": "both",
+            "synonyms": []
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      }
+    ],
+    "voiceId": "0",
+    "childDirected": false,
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 300,
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Me fail English? That's unpossible."
+        },
+        {
+          "contentType": "PlainText",
+          "content": "I bent my wookie"
+        },
+        {
+          "contentType": "PlainText",
+          "content": "My cat's breath smells like cat food"
+        },
+        {
+          "contentType": "PlainText",
+          "content": "I glued my head to my shoulder"
+        }
+      ],
+      "maxAttempts": 5
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I could not understand. Goodbye."
+        }
+      ]
+    }
+  }
+}
