@@ -13,7 +13,7 @@ async function dialogCodeHook(event) {
 
   // TODO: Validate memeName exists
 
-  let response;
+  let response = delegate(event);
   if (!memeName || !textPlacement) {
     // prompt for meme name and text placement before asking user for text
     response = delegate(event);
