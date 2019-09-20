@@ -2,11 +2,20 @@ const {
   elicitSlot,
   delegate,
   close,
+  confirmIntent,
   plainTextMessage
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
 async function dialogCodeHook(event) {
+  // check if user is coming in from a confirm intent action that they denied
+  if (event.currentIntent.confirmationStatus === "Denied") {
+    return close(event, {
+      fulfillmentState: "Fulfilled",
+      message: plainTextMessage("Ok")
+    });
+  }
+
   const slots = event.currentIntent.slots || {};
   const { memeName, textPlacement, topText, bottomText } = slots;
   
@@ -51,7 +60,7 @@ async function dialogCodeHook(event) {
 async function fulfillment(event) {
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
-  const memeId = memeName.split(':')[1];
+  const [memeLabel, memeId] = memeName.split(':');
 
   const imgUrl = await createMeme(memeId, topText, bottomText);
 
@@ -62,15 +71,47 @@ async function fulfillment(event) {
     });
   }
 
-  return close(event, {
+  const fulfilledResponse = close(event, {
     fulfillmentState: "Fulfilled",
     message: plainTextMessage(imgUrl)
   });
+
+  // track this last successfully created meme in case user wants to use it again right away
+  fulfilledResponse.sessionAttributes = { 
+    memeLabel,
+    memeName,
+    imgUrl,
+    topText,
+    bottomText
+  };
+
+  return fulfilledResponse;
 }
 
-module.exports.handler = async event => {
+module.exports.generatorHandler = async event => {
   console.log(JSON.stringify(event));
-  return (await event.invocationSource) === "DialogCodeHook"
+  return (await event.invocationSource === "DialogCodeHook"
     ? dialogCodeHook(event)
-    : fulfillment(event);
+    : fulfillment(event));
+};
+
+module.exports.repeatHandler = async event => {
+  console.log(JSON.stringify(event));
+  const { memeLabel, memeName, imgUrl } = event.sessionAttributes;
+
+  if (!memeLabel || !memeName || !imgUrl) {
+    return close(event, {
+      fulfillmentState: "Fulfilled",
+      message: plainTextMessage("You haven't created any memes recently")
+    });
+  }
+
+  const msg = `You made a "${memeLabel}" meme last time, ${imgUrl}. Do you want to create another one like this?`;
+  const response =  confirmIntent(event, 'CreateMeme', msg);
+
+  response.dialogAction.slots = {
+    memeName
+  };
+
+  return response;
 };

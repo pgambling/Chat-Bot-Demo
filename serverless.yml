@@ -50,7 +50,10 @@ functions:
           method: post
 
   meme-generator:
-    handler: src/lex/meme-generator.handler
+    handler: src/lex/meme-generator.generatorHandler
     environment:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
+
+  meme-repeat:
+    handler: src/lex/meme-generator.repeatHandler
