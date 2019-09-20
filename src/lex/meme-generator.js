@@ -12,7 +12,7 @@ async function dialogCodeHook(event) {
   
   let response = delegate(event);
   if (!memeName || !textPlacement) {
-    if (memeName) {
+    if (memeName && memeName.indexOf(':') === -1) { // haven't validated this meme yet
       const meme = await searchForMeme(memeName);
 
       if (!meme) {

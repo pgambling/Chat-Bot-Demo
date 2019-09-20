@@ -35,6 +35,11 @@ async function searchForMeme(query) {
     }
   }
 
+  // a shortcut to just retun a random selection
+  if (query === 'random') {
+    return MEME_LIST[Math.floor(Math.random() * MEME_LIST.length)];
+  }
+
   const fuse = new Fuse(MEME_LIST, FUSE_OPTIONS);
   const result = fuse.search(query);
 
