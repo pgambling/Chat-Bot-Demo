@@ -3,7 +3,7 @@ const request = require("request-promise-native");
 
 const FUSE_OPTIONS = {
   shouldSort: true,
-  threshold: 1,
+  threshold: 0.6,
   location: 0,
   distance: 100,
   maxPatternLength: 32,
@@ -11,8 +11,17 @@ const FUSE_OPTIONS = {
   keys: ["name"]
 };
 
+const canariasMeme = {
+  "id": "146476669",
+  "name": "canarias",  
+}
+
 // relying on warmed up lambda for quick and dirty request caching
 let MEME_LIST;
+
+function currentMemeList() {
+  return MEME_LIST;
+}
 
 async function searchForMeme(query) {
   if (!MEME_LIST) {
@@ -22,7 +31,7 @@ async function searchForMeme(query) {
     });
 
     if (response.success) {
-      MEME_LIST = response.data.memes;
+      MEME_LIST = [...response.data.memes, canariasMeme];
     }
   }
 
@@ -67,5 +76,6 @@ async function createMeme(id, textTop, textBottom) {
 
 module.exports = {
   searchForMeme,
-  createMeme
+  createMeme,
+  currentMemeList
 };

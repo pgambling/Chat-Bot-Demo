@@ -25,15 +25,6 @@ provider:
         - "translate:TranslateText"
         - "comprehend:DetectDominantLanguage"
       Resource: "*"
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -63,23 +54,3 @@ functions:
     environment:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
-
-  meme-lookup:
-    handler: src/lex/meme-lookup.handler
-
-resources:
-  Resources:
-    ChatUsersDynamoDbTable:
-      Type: "AWS::DynamoDB::Table"
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
