@@ -78,19 +78,10 @@ exports.handler = async function(event) {
 
   if (!body.message) return NO_OP_RESPONSE;
 
-  const { from, forward_date, chat, text } = body.message;
+  const { from, chat, text } = body.message;
 
   try {
     if (!text || text === "/start") return NO_OP_RESPONSE; // TODO: Respond to /start
-
-    if (forward_date && text) {
-      // attempt translate forwarded messages
-      console.log(
-        `Received forwarded message "${text}" from ${from.username} in chat ${chat.id}`
-      );
-      const translatedText = await translateText(text);
-      return message(chat.id, translatedText);
-    }
 
     console.log(`Received "${text}" from ${from.username} in chat ${chat.id}`);
 
@@ -101,6 +92,7 @@ exports.handler = async function(event) {
     const telegramResponse = convertLexReplyToTelegram(chat.id, lexReply);
     console.log("Sending response to telegram");
     console.log(JSON.stringify(telegramResponse));
+    
     return telegramResponse;
   } catch (err) {
     // return something in case of error so Telegram doesn't keep sending the same update
