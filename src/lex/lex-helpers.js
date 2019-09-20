@@ -28,8 +28,12 @@ function createLexResponse(inputEvent, dialogActionArgs) {
   };
 }
 
-function elicitSlot(inputEvent, slotToElicit) {
-  return createLexResponse(inputEvent, { type: "ElicitSlot", slotToElicit });
+function elicitSlot(inputEvent, slotToElicit, message) {
+  const dialogActionCfg = { type: "ElicitSlot", slotToElicit };
+  if (message) {
+    dialogActionCfg.message = plainTextMessage(message);
+  }
+  return createLexResponse(inputEvent, dialogActionCfg);
 }
 
 function confirmIntent(inputEvent, message) {

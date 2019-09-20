@@ -4,19 +4,30 @@ const {
   close,
   plainTextMessage
 } = require("./lex-helpers");
-const { getUser, updateUser } = require("../db");
-const { searchForMeme, createMeme } = require("../meme-api");
+const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
 async function dialogCodeHook(event) {
   const slots = event.currentIntent.slots || {};
   const { memeName, textPlacement, topText, bottomText } = slots;
-
-  // TODO: Validate memeName exists
-
+  
   let response = delegate(event);
   if (!memeName || !textPlacement) {
-    // prompt for meme name and text placement before asking user for text
-    response = delegate(event);
+    if (memeName) {
+      const meme = await searchForMeme(memeName);
+
+      if (!meme) {
+        slots.memeName = null;
+        const topMemes = currentMemeList().slice(0, 3).map(m => m.name).join('\n');
+        response =  elicitSlot(
+          event,
+          "memeName",
+          `I didn't find a ${memeName} meme, but the top 3 memes I found are:\n${topMemes}\nTell me again what meme you want to use?`);
+      } else {
+        slots.memeName = `${meme.name}:${meme.id}`;
+      }
+    } else {
+      response = delegate(event);
+    }
   } else if (
     !topText &&
     (textPlacement === "both" || textPlacement === "top")
@@ -40,20 +51,9 @@ async function dialogCodeHook(event) {
 async function fulfillment(event) {
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
-  const meme = await searchForMeme(memeName);
+  const memeId = memeName.split(':')[1];
 
-  if (!meme) {
-    // Handle no match
-    // TODO: Suggest alternatives? Move this to validation
-    return close(event, {
-      fulfillmentState: "Failed",
-      message: plainTextMessage(
-        `I'm sorry, but I couldn't find a meme that matched ${memeName}`
-      )
-    });
-  }
-
-  const imgUrl = await createMeme(meme.id, topText, bottomText);
+  const imgUrl = await createMeme(memeId, topText, bottomText);
 
   if (!imgUrl) {
     return close(event, {
@@ -61,17 +61,6 @@ async function fulfillment(event) {
       message: plainTextMessage("Something went wrong...")
     });
   }
-
-  // store the last 30 memes created
-  const user = (await getUser(event.userId)) || {
-    memes: [],
-    created: Date.now()
-  };
-  console.log(`Current user ${JSON.stringify(user)}`);
-  user.memes = [{ imgUrl, created: Date.now() }, ...user.memes.slice(0, 4)];
-  user.updated = Date.now();
-  console.log(`Updated user ${JSON.stringify(user)}`);
-  await updateUser(event.userId, user);
 
   return close(event, {
     fulfillmentState: "Fulfilled",
