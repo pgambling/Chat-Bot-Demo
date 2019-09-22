@@ -1,3 +1,5 @@
+const { close, confirmIntent, plainTextMessage } = require("./lex-helpers");
+
 module.exports.handler = async event => {
   console.log(JSON.stringify(event));
   const { memeLabel, memeName, imgUrl } = event.sessionAttributes || {};

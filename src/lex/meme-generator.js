@@ -2,7 +2,6 @@ const {
   elicitSlot,
   delegate,
   close,
-  confirmIntent,
   plainTextMessage
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
