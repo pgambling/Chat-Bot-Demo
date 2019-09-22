@@ -4,15 +4,35 @@ const {
   close,
   plainTextMessage
 } = require("./lex-helpers");
-const { searchForMeme, createMeme } = require("../meme-api");
+const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
 async function dialogCodeHook(event) {
   const slots = event.currentIntent.slots || {};
   const { memeName, textPlacement, topText, bottomText } = slots;
 
-  let response;
+  let response = delegate(event);
   if (!memeName || !textPlacement) {
-    response = delegate(event);
+    if (memeName && memeName.indexOf(":") === -1) {
+      // haven't validated this meme yet
+      const meme = await searchForMeme(memeName);
+
+      if (!meme) {
+        slots.memeName = null;
+        const topMemes = currentMemeList()
+          .slice(0, 3)
+          .map(m => m.name)
+          .join("\n");
+        response = elicitSlot(
+          event,
+          "memeName",
+          `I didn't find a ${memeName} meme, but the top 3 memes I found are:\n${topMemes}\nTell me again what meme you want to use?`
+        );
+      } else {
+        slots.memeName = `${meme.name}:${meme.id}`;
+      }
+    } else {
+      response = delegate(event);
+    }
   } else if (
     !topText &&
     (textPlacement === "both" || textPlacement === "top")
@@ -36,16 +56,9 @@ async function dialogCodeHook(event) {
 async function fulfillment(event) {
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
-  const meme = await searchForMeme(memeName);
+  const memeId = memeName.split(":")[1];
 
-  if (!meme) {
-    return close(event, {
-      fulfillmentState: "Failed",
-      message: plainTextMessage(`I couldn't find a match for "${memeName}"`)
-    });
-  }
-
-  const imgUrl = await createMeme(meme.id, topText, bottomText);
+  const imgUrl = await createMeme(memeId, topText, bottomText);
 
   if (!imgUrl) {
     return close(event, {
