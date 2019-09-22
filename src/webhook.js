@@ -72,6 +72,19 @@ function convertLexReplyToTelegram(chatId, lexReply) {
   };
 }
 
+function welcomeMessage(chatId, user) {
+  const responseBody = {
+    chat_id: chatId,
+    method: "sendMessage",
+    text: `Hi ${user.first_name}, I'm a bot who loves to create memes for people. To get started, just say "I want to make a meme"`
+  };
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(responseBody)
+  };
+}
+
 exports.handler = async function(event) {
   console.log(event.body);
   const body = JSON.parse(event.body);
@@ -81,7 +94,12 @@ exports.handler = async function(event) {
   const { from, chat, text } = body.message;
 
   try {
-    if (!text || text === "/start") return NO_OP_RESPONSE; // TODO: Respond to /start
+    if (!text) return NO_OP_RESPONSE;
+
+    if (text === "/start") {
+      console.log(`Sending welcome message to ${from.username}`);
+      return welcomeMessage(chat.id, from);
+    }
 
     console.log(`Received "${text}" from ${from.username} in chat ${chat.id}`);
 

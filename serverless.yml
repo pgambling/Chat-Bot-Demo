@@ -4,7 +4,7 @@ frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
-  stage: demo
+  stage: complete
   profile: personal
   runtime: nodejs10.x
   environment:
@@ -50,10 +50,10 @@ functions:
           method: post
 
   meme-generator:
-    handler: src/lex/meme-generator.generatorHandler
+    handler: src/lex/meme-generator.handler
     environment:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
 
   meme-repeat:
-    handler: src/lex/meme-generator.repeatHandler
+    handler: src/lex/meme-repeat.handler
