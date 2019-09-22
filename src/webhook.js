@@ -14,6 +14,7 @@ async function sendTextToLexBot(userId, inputText) {
 
     const lex = new AWS.LexRuntime();
     const response = await lex.postText(params).promise();
+
     console.log("Got a response from Lex bot");
     console.log(response);
 
@@ -108,6 +109,7 @@ exports.handler = async function(event) {
     const lexReply = await sendTextToLexBot(senderId, text);
 
     const telegramResponse = convertLexReplyToTelegram(chat.id, lexReply);
+
     console.log("Sending response to telegram");
     console.log(JSON.stringify(telegramResponse));
     

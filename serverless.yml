@@ -4,7 +4,7 @@ frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
-  stage: complete
+  stage: demo
   profile: personal
   runtime: nodejs10.x
   environment:
@@ -13,18 +13,12 @@ provider:
     LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
     IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
     IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
-    DYNAMODB_TABLE: ${self:service}-${self:custom.stage}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
         - "lex:PostText"
       Resource:
         - ${self:custom.lexBotArn}
-    - Effect: "Allow"
-      Action:
-        - "translate:TranslateText"
-        - "comprehend:DetectDominantLanguage"
-      Resource: "*"
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -54,6 +48,3 @@ functions:
     environment:
       IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
       IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
-
-  meme-repeat:
-    handler: src/lex/meme-repeat.handler
