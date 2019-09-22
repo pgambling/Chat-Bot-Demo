@@ -1,8 +1,39 @@
-const { close, plainTextMessage } = require("./lex-helpers");
+const {
+  elicitSlot,
+  delegate,
+  close,
+  plainTextMessage
+} = require("./lex-helpers");
 const { searchForMeme, createMeme } = require("../meme-api");
 
-module.exports.handler = async event => {
-  console.log(JSON.stringify(event));
+async function dialogCodeHook(event) {
+  const slots = event.currentIntent.slots || {};
+  const { memeName, textPlacement, topText, bottomText } = slots;
+
+  let response;
+  if (!memeName || !textPlacement) {
+    response = delegate(event);
+  } else if (
+    !topText &&
+    (textPlacement === "both" || textPlacement === "top")
+  ) {
+    response = elicitSlot(event, "topText");
+  } else if (
+    !bottomText &&
+    (textPlacement === "both" || textPlacement === "bottom")
+  ) {
+    response = elicitSlot(event, "bottomText");
+  } else {
+    // all slots filled in
+    response = delegate(event);
+  }
+
+  response.dialogAction.slots = slots;
+
+  return response;
+}
+
+async function fulfillment(event) {
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
   const meme = await searchForMeme(memeName);
@@ -28,3 +59,10 @@ module.exports.handler = async event => {
     message: plainTextMessage(imgUrl)
   });
 }
+
+module.exports.handler = async event => {
+  console.log(JSON.stringify(event));
+  return (await event.invocationSource) === "DialogCodeHook"
+    ? dialogCodeHook(event)
+    : fulfillment(event);
+};
