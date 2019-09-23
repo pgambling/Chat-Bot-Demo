@@ -2,7 +2,8 @@ const {
   elicitSlot,
   delegate,
   close,
-  plainTextMessage
+  plainTextMessage,
+  imageResponseCard
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
@@ -17,19 +18,24 @@ async function dialogCodeHook(event) {
 
   const slots = event.currentIntent.slots || {};
   const { memeName, textPlacement, topText, bottomText } = slots;
-  
+
   let response = delegate(event);
   if (!memeName || !textPlacement) {
-    if (memeName && memeName.indexOf(':') === -1) { // haven't validated this meme yet
+    if (memeName && memeName.indexOf(":") === -1) {
+      // haven't validated this meme yet
       const meme = await searchForMeme(memeName);
 
       if (!meme) {
         slots.memeName = null;
-        const topMemes = currentMemeList().slice(0, 3).map(m => m.name).join('\n');
-        response =  elicitSlot(
+        const topMemes = currentMemeList()
+          .slice(0, 3)
+          .map(m => m.name)
+          .join("\n");
+        response = elicitSlot(
           event,
           "memeName",
-          `I didn't find a ${memeName} meme, but the top 3 memes I found are:\n${topMemes}\nTell me again what meme you want to use?`);
+          `I didn't find a ${memeName} meme, but the top 3 memes I found are:\n${topMemes}\nTell me again what meme you want to use?`
+        );
       } else {
         slots.memeName = `${meme.name}:${meme.id}`;
       }
@@ -59,7 +65,7 @@ async function dialogCodeHook(event) {
 async function fulfillment(event) {
   const { memeName, topText, bottomText } = event.currentIntent.slots;
 
-  const [memeLabel, memeId] = memeName.split(':');
+  const [memeLabel, memeId] = memeName.split(":");
 
   const imgUrl = await createMeme(memeId, topText, bottomText);
 
@@ -72,11 +78,12 @@ async function fulfillment(event) {
 
   const fulfilledResponse = close(event, {
     fulfillmentState: "Fulfilled",
-    message: plainTextMessage(imgUrl)
+    message: plainTextMessage(imgUrl),
+    responseCard: imageResponseCard(imgUrl)
   });
 
   // track this last successfully created meme in case user wants to use it again right away
-  fulfilledResponse.sessionAttributes = { 
+  fulfilledResponse.sessionAttributes = {
     memeLabel,
     memeName,
     imgUrl,
@@ -89,8 +96,7 @@ async function fulfillment(event) {
 
 module.exports.handler = async event => {
   console.log(JSON.stringify(event));
-  return (await event.invocationSource === "DialogCodeHook"
+  return (await event.invocationSource) === "DialogCodeHook"
     ? dialogCodeHook(event)
-    : fulfillment(event));
+    : fulfillment(event);
 };
-
