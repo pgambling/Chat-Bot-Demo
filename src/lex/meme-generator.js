@@ -2,7 +2,8 @@ const {
   elicitSlot,
   delegate,
   close,
-  plainTextMessage
+  plainTextMessage,
+  imageResponseCard
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
@@ -69,7 +70,8 @@ async function fulfillment(event) {
 
   return close(event, {
     fulfillmentState: "Fulfilled",
-    message: plainTextMessage(imgUrl)
+    message: plainTextMessage(imgUrl),
+    responseCard: imageResponseCard(imgUrl)
   });
 }
 
