@@ -1,4 +1,9 @@
-const { close, confirmIntent, plainTextMessage } = require("./lex-helpers");
+const {
+  close,
+  confirmIntent,
+  plainTextMessage,
+  imageResponseCard
+} = require("./lex-helpers");
 
 module.exports.handler = async event => {
   console.log(JSON.stringify(event));
@@ -11,8 +16,11 @@ module.exports.handler = async event => {
     });
   }
 
-  const msg = `You made a "${memeLabel}" meme last time, ${imgUrl}. Do you want to create another one like this?`;
-  const response = confirmIntent(event, "MemeCreateDemo", msg);
+  const msg = `You made a "${memeLabel}" meme last time. Do you want to create another one like this?`;
+  const response = confirmIntent(event, "MemeCreateDemo", {
+    message: plainTextMessage(msg),
+    responseCard: imageResponseCard(imgUrl)
+  });
 
   response.dialogAction.slots = {
     memeName

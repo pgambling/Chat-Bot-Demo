@@ -36,10 +36,10 @@ function elicitSlot(inputEvent, slotToElicit, message) {
   return createLexResponse(inputEvent, dialogActionCfg);
 }
 
-function confirmIntent(inputEvent, intentName, message) {
-  const response =  createLexResponse(inputEvent, {
-    type: "ConfirmIntent",
-    message: plainTextMessage(message)
+function confirmIntent(inputEvent, intentName, dialogActionArgs) {
+  const response = createLexResponse(inputEvent, {
+    ...dialogActionArgs,
+    type: "ConfirmIntent"
   });
 
   response.dialogAction.intentName = intentName;

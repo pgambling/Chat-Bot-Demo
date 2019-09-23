@@ -2,7 +2,8 @@ const {
   elicitSlot,
   delegate,
   close,
-  plainTextMessage
+  plainTextMessage,
+  imageResponseCard
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
@@ -77,7 +78,8 @@ async function fulfillment(event) {
 
   const fulfilledResponse = close(event, {
     fulfillmentState: "Fulfilled",
-    message: plainTextMessage(imgUrl)
+    message: plainTextMessage(imgUrl),
+    responseCard: imageResponseCard(imgUrl)
   });
 
   // track this last successfully created meme in case user wants to use it again right away
