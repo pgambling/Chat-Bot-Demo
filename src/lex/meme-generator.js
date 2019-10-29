@@ -7,16 +7,41 @@ const {
 } = require("./lex-helpers");
 const { searchForMeme, createMeme, currentMemeList } = require("../meme-api");
 
+const FREE_TEXT_SLOTS = ["topText", "bottomText"];
+
+/**
+ * Lex sometimes trims off leading and trailing punctuation from elict slot actions. This overrides that slot
+ * by replacing it with the full input transcript from the event.
+ */
+function fixFreeTextInput(previousIntent, inputTranscript, slots) {
+  const slotToElicit = previousIntent.slotToElicit;
+
+  if (!inputTranscript) return slots;
+  if (!FREE_TEXT_SLOTS.includes(slotToElicit)) return slots;
+
+  return { ...slots, [slotToElicit]: inputTranscript };
+}
+
 async function dialogCodeHook(event) {
+  const { inputTranscript, recentIntentSummaryView } = event;
+  const previousIntent = (recentIntentSummaryView || [])[0] || {};
+
   // check if user is coming in from a confirm intent action that they denied
-  if (event.currentIntent.confirmationStatus === "Denied") {
+  if (
+    previousIntent.dialogActionType === "ConfirmIntent" &&
+    event.currentIntent.confirmationStatus === "Denied"
+  ) {
     return close(event, {
       fulfillmentState: "Fulfilled",
       message: plainTextMessage("Ok")
     });
   }
 
-  const slots = event.currentIntent.slots || {};
+  let slots = event.currentIntent.slots || {};
+  if (previousIntent.dialogActionType === "ElicitSlot") {
+    slots = fixFreeTextInput(previousIntent, inputTranscript, slots);
+  }
+
   const { memeName, textPlacement, topText, bottomText } = slots;
 
   let response = delegate(event);
