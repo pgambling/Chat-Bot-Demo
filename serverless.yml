@@ -9,10 +9,6 @@ provider:
   runtime: nodejs10.x
   environment:
     ENV_NAME: ${self:custom.stage}
-    LEX_BOT_ALIAS: ${self:custom.environment.LEX_BOT_ALIAS}
-    LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
-    IMGFLIP_USERNAME: ${self:custom.environment.IMGFLIP_USERNAME}
-    IMGFLIP_PASSWORD: ${self:custom.environment.IMGFLIP_PASSWORD}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -43,6 +39,11 @@ custom:
 functions:
   telegram-webhook:
     handler: src/webhook.handler
+    environment:
+      TELEGRAM_API_TOKEN: ${self:custom.environment.TELEGRAM_API_TOKEN}
+      LEX_BOT_ALIAS: ${self:custom.environment.LEX_BOT_ALIAS}
+      LEX_BOT_NAME: ${self:custom.environment.LEX_BOT_NAME}
+
     events:
       - http:
           path: telegram/webhook
