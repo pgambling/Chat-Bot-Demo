@@ -1,0 +1,1006 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "MemeBot",
+    "version": "6",
+    "intents": [
+      {
+        "name": "RepeatMeme",
+        "version": "2",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:578681038652:function:meme-bot-complete-meme-repeat",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "What is the last meme I made",
+          "Repeat that meme",
+          "What meme did I just make",
+          "Make another one"
+        ],
+        "slots": []
+      },
+      {
+        "name": "CreateMeme",
+        "version": "9",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:578681038652:function:meme-bot-complete-meme-generator",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "I want a meme",
+          "Make a meme",
+          "Create a meme",
+          "Make me something",
+          "Make a {memeName}",
+          "I want a {memeName}",
+          "I want a {memeName} meme"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "FreeText",
+            "slotTypeVersion": "1",
+            "slotConstraint": "Optional",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What do you want to write on bottom?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 4,
+            "name": "bottomText"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.Book",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which meme do you want to use?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "memeName"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "MemeTextPlacement",
+            "slotTypeVersion": "2",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Where do you want to include the text?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"buttons\":[{\"text\":\"Top and Bottom\",\"value\":\"both\"},{\"text\":\"Top\",\"value\":\"top\"},{\"text\":\"Bottom\",\"value\":\"bottom\"}]}]}",
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "textPlacement"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "FreeText",
+            "slotTypeVersion": "1",
+            "slotConstraint": "Optional",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What do you want to write on top?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "topText"
+          }
+        ],
+        "dialogCodeHook": {
+          "uri": "arn:aws:lambda:us-east-1:578681038652:function:meme-bot-complete-meme-generator",
+          "messageVersion": "1.0"
+        }
+      }
+    ],
+    "slotTypes": [
+      {
+        "description": "Training text input for custom free flow slot",
+        "name": "FreeText",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "Sir George Burnwell has been several times lately"
+          },
+          {
+            "value": "I could not live there longer without some advice"
+          },
+          {
+            "value": "And you know where they are"
+          },
+          {
+            "value": "I have caught you have I"
+          },
+          {
+            "value": "I know that Miss Stoner has been here"
+          },
+          {
+            "value": "I am lost without my Boswell"
+          },
+          {
+            "value": "From that appointment he never came back alive"
+          },
+          {
+            "value": "Yet we have not a moment to lose"
+          },
+          {
+            "value": "Very retiring and gentlemanly he was"
+          },
+          {
+            "value": "Then I do not think that I need to detain you longer"
+          },
+          {
+            "value": "This fellow will not go wrong again; he is too terribly frightened"
+          },
+          {
+            "value": "Might I not escort her to this place"
+          },
+          {
+            "value": "My dear wife knew that I had business in the City"
+          },
+          {
+            "value": "I had seen little of Holmes lately"
+          },
+          {
+            "value": "You’ll know all about it presently"
+          },
+          {
+            "value": "There was not a bird to be seen there"
+          },
+          {
+            "value": "Then I thought of the whistle"
+          },
+          {
+            "value": "this may save us a visit to Brixton Road” whispered Holmes"
+          },
+          {
+            "value": "They were all horrible to me"
+          },
+          {
+            "value": "I could see a change in my uncle however"
+          },
+          {
+            "value": "It’s the big white one over yonder"
+          },
+          {
+            "value": "I know that James didn’t do it"
+          },
+          {
+            "value": "Oh don’t bring it into court"
+          },
+          {
+            "value": "You have made your statement very clearly"
+          },
+          {
+            "value": "The lady coloured deeply and covered over her injured wrist"
+          },
+          {
+            "value": "How shall I ever forget that dreadful vigil"
+          },
+          {
+            "value": "Hatherley’ said he with something of a German accent"
+          },
+          {
+            "value": "Oakshott 117 Brixton Road—249” read Holmes"
+          },
+          {
+            "value": "I want the doctor’s advice and help too"
+          },
+          {
+            "value": "You say that there was a gentleman in the pew"
+          },
+          {
+            "value": "At first of course he denied everything"
+          },
+          {
+            "value": "Your niece knew nothing of such men"
+          },
+          {
+            "value": "They are not very exacting after all"
+          },
+          {
+            "value": "They were all three standing in a knot in front of the altar"
+          },
+          {
+            "value": "These pretended journeys to France were rather cumbrous"
+          },
+          {
+            "value": "There is only one point on which I must insist"
+          },
+          {
+            "value": "This is what began it all"
+          },
+          {
+            "value": "There only remains Mrs Toller who might give the alarm"
+          },
+          {
+            "value": "Come now we shall see who agrees with you"
+          },
+          {
+            "value": "He had nothing a few years ago"
+          },
+          {
+            "value": "It is perhaps the best possible solution"
+          },
+          {
+            "value": "You will sign it and Watson here can witness it"
+          },
+          {
+            "value": "Besides what use was my hair to me"
+          },
+          {
+            "value": "Twice he struck at the chamber door without any reply from within"
+          },
+          {
+            "value": "This case I presume contains the coronet"
+          },
+          {
+            "value": "I think it was before your time Watson"
+          },
+          {
+            "value": "I shall look into the matter between this and then"
+          },
+          {
+            "value": "Then there was the peculiar dying reference to a rat"
+          },
+          {
+            "value": "And first as to how it came here"
+          },
+          {
+            "value": "It must be where she can lay her hands upon it"
+          },
+          {
+            "value": "What do you want” he asked in a quavering voice"
+          },
+          {
+            "value": "Head attendant at the Hotel Cosmopolitan"
+          },
+          {
+            "value": "I confess that I was disappointed"
+          },
+          {
+            "value": "This account of you we have from all quarters received"
+          },
+          {
+            "value": "I have never denied him a wish"
+          },
+          {
+            "value": "It had only lain there a few days"
+          },
+          {
+            "value": "You may go to any expense which you think necessary"
+          },
+          {
+            "value": "He never did wish us to go anywhere"
+          },
+          {
+            "value": "Then he became a little more reasonable"
+          },
+          {
+            "value": "I have already arranged what is to occur"
+          },
+          {
+            "value": "The summons was a brief and urgent one"
+          },
+          {
+            "value": "I am sorry to have interrupted you"
+          },
+          {
+            "value": "I read suspicion there and annoyance but no jest"
+          },
+          {
+            "value": "Her lips too were bloodless but her eyes were flushed with crying"
+          },
+          {
+            "value": "Angel’s address you never had I understand"
+          },
+          {
+            "value": "We can’t command our love but we can our actions"
+          },
+          {
+            "value": "Male costume is nothing new to me"
+          },
+          {
+            "value": "It was late before Sherlock Holmes returned"
+          },
+          {
+            "value": "what an observant young lady we have come upon"
+          },
+          {
+            "value": "Together we rushed into the room"
+          },
+          {
+            "value": "But soon he found that that would not answer forever"
+          },
+          {
+            "value": "The other was his singular dying reference to a rat"
+          },
+          {
+            "value": "I wouldn’t frighten Kate—poor little Kate"
+          },
+          {
+            "value": "Why should she hand it over to anyone else"
+          },
+          {
+            "value": "There he is all safe and sound"
+          },
+          {
+            "value": "It is introspective and I want to introspect"
+          },
+          {
+            "value": "Holmes gazed long and earnestly at it"
+          },
+          {
+            "value": "All right John; we shall not need you"
+          },
+          {
+            "value": "I had it from the stevedore who has been loading their cargo"
+          },
+          {
+            "value": "I was already a dying and a desperate man"
+          },
+          {
+            "value": "What could be the reason of his overpowering terror"
+          },
+          {
+            "value": "But what was she to do"
+          },
+          {
+            "value": "it is too late—forever too late"
+          },
+          {
+            "value": "It’s a cold night” said Holmes"
+          },
+          {
+            "value": "Once we diverted her luggage when she travelled"
+          },
+          {
+            "value": "But I hear the rumble of wheels"
+          },
+          {
+            "value": "He did tell me the address"
+          },
+          {
+            "value": "But among them was Sir George Burnwell"
+          },
+          {
+            "value": "I do not think that I have ever seen so thin a man"
+          },
+          {
+            "value": "You seem to have done the thing very completely"
+          },
+          {
+            "value": "Send him to gaol now and you make him a gaolbird for life"
+          },
+          {
+            "value": "I’ll swear it on a Bible"
+          },
+          {
+            "value": "I know that her word is inviolate"
+          },
+          {
+            "value": "And now let us consider another point"
+          },
+          {
+            "value": "he is the greengrocer who brings our vegetables round"
+          },
+          {
+            "value": "You are a funny one” chuckled the inspector"
+          },
+          {
+            "value": "Mary and I stay at home"
+          },
+          {
+            "value": "He had set the engine at work"
+          },
+          {
+            "value": "I know that he is right"
+          },
+          {
+            "value": "It must be done at once"
+          },
+          {
+            "value": "I looked at it before” said Lestrade"
+          },
+          {
+            "value": "It is the German who is so uncourteous to his verbs"
+          },
+          {
+            "value": "Now I am left to a lonely and dishonoured age"
+          },
+          {
+            "value": "She was bound to have me in"
+          },
+          {
+            "value": "And your address had been given me"
+          },
+          {
+            "value": "I would send you a wire"
+          },
+          {
+            "value": "It is a subject to which I have devoted some little attention"
+          },
+          {
+            "value": "Let us follow it out to the bitter end"
+          },
+          {
+            "value": "And why could he not write"
+          },
+          {
+            "value": "Born in New Jersey in the year 1858"
+          },
+          {
+            "value": "It is a hobby of mine to have an exact knowledge of London"
+          },
+          {
+            "value": "And no later than this morning"
+          },
+          {
+            "value": "But there was no great difficulty in the first stage of my adventure"
+          },
+          {
+            "value": "Between your brandy and your bandage I feel a new man"
+          },
+          {
+            "value": "The salesman nodded and shot a questioning glance at my companion"
+          },
+          {
+            "value": "You are doing what you can for him and for me"
+          },
+          {
+            "value": "Three thousand will cover the matter"
+          },
+          {
+            "value": "Holmes cut the cord and removed the transverse bar"
+          },
+          {
+            "value": "I have no doubt that I am myself to blame"
+          },
+          {
+            "value": "I braved him to do his worst"
+          },
+          {
+            "value": "I am at my wit’s end"
+          },
+          {
+            "value": "Let us now see the letter"
+          },
+          {
+            "value": "He wished us to leave him alone"
+          },
+          {
+            "value": "Out there fell a cascade of children’s bricks"
+          },
+          {
+            "value": "They are important you understand without being interesting"
+          },
+          {
+            "value": "They were found floating near the margin by a parkkeeper"
+          },
+          {
+            "value": "In that however I was in error"
+          },
+          {
+            "value": "How could my hair have been locked in the drawer"
+          },
+          {
+            "value": "Of course it is a nucleus and focus of crime"
+          },
+          {
+            "value": "As I dressed I glanced at my watch"
+          },
+          {
+            "value": "Even a wife’s eyes could not pierce so complete a disguise"
+          },
+          {
+            "value": "It was twentyfive minutes past four"
+          },
+          {
+            "value": "My sister thinks that I am going mad"
+          },
+          {
+            "value": "It is a hat of the very best quality"
+          },
+          {
+            "value": "And yet what could have happened"
+          },
+          {
+            "value": "But how to get to him in safety"
+          },
+          {
+            "value": "I do not know what I could do without her"
+          },
+          {
+            "value": "It had been hacked or torn right out from the roots"
+          },
+          {
+            "value": "Then my friend rose and threw open the door"
+          },
+          {
+            "value": "It is this infernal St Simon marriage case"
+          },
+          {
+            "value": "I love and am loved by a better man than he"
+          },
+          {
+            "value": "It must then be something out of the house"
+          },
+          {
+            "value": "And in practice again I observe"
+          },
+          {
+            "value": "I wish she had been of my own station"
+          },
+          {
+            "value": "Contact the Foundation as set forth in Section 3 below"
+          },
+          {
+            "value": "What was he doing there at all"
+          },
+          {
+            "value": "There is a woodcock I believe"
+          },
+          {
+            "value": "I thought of the salt that I have been working upon"
+          },
+          {
+            "value": "Give him an arm back into his chair Watson"
+          },
+          {
+            "value": "To me it has been exceptionally so"
+          },
+          {
+            "value": "With a shriek of joy our client clutched it up"
+          },
+          {
+            "value": "A maid rushed across and threw open the window"
+          },
+          {
+            "value": "I may want your help and so may he"
+          },
+          {
+            "value": "Where were we going and what were we to do"
+          },
+          {
+            "value": "Local aid is always either worthless or else biassed"
+          },
+          {
+            "value": "There would be one to Reading in less than an hour"
+          },
+          {
+            "value": "Besides she is not so very young"
+          },
+          {
+            "value": "A loud thudding noise came from somewhere downstairs"
+          },
+          {
+            "value": "The bedroom window was a broad one and opened from below"
+          },
+          {
+            "value": "It was a singular sight which met our eyes"
+          },
+          {
+            "value": "There are only two a man and his wife"
+          },
+          {
+            "value": "I entered my consultingroom and found a gentleman seated by the table"
+          },
+          {
+            "value": "You’d be as warm maybe if you were as pestered as I am"
+          },
+          {
+            "value": "On the inside of the flap he wrote “S"
+          },
+          {
+            "value": "It might be a lover; it might be a husband"
+          },
+          {
+            "value": "There was the case and of course there was but one way out of it"
+          },
+          {
+            "value": "But that is a mere detail"
+          },
+          {
+            "value": "She is impetuous—volcanic I was about to say"
+          },
+          {
+            "value": "I didn’t know what to do"
+          },
+          {
+            "value": "We must come back to that"
+          },
+          {
+            "value": "There is not an instant to be lost"
+          },
+          {
+            "value": "The only remaining point was what they were burrowing for"
+          },
+          {
+            "value": "I’ll have the other and I’ll take it now’ said I"
+          },
+          {
+            "value": "Nothing but energy can save you"
+          },
+          {
+            "value": "B” were scrawled upon one side"
+          },
+          {
+            "value": "Those are the crucial points upon which the case depends"
+          },
+          {
+            "value": "You said it should not be again"
+          },
+          {
+            "value": "Then he turned down the lamp and we were left in darkness"
+          },
+          {
+            "value": "And this promises to be interesting"
+          },
+          {
+            "value": "They are the devil’s pet baits"
+          },
+          {
+            "value": "And yet she had some secret sorrow this woman"
+          },
+          {
+            "value": "Then there is no more to be done in the matter"
+          },
+          {
+            "value": "I took two steps forward and looked back"
+          },
+          {
+            "value": "And if it were guilty why did he not invent a lie"
+          },
+          {
+            "value": "The man who entered was a strange and impressive figure"
+          },
+          {
+            "value": "Finally he took the bellrope in his hand and gave it a brisk tug"
+          },
+          {
+            "value": "I would call your attention very particularly to two points"
+          },
+          {
+            "value": "Let the matter drop and say no more"
+          },
+          {
+            "value": "As we entered he made neither sound nor motion"
+          },
+          {
+            "value": "Too large for easy concealment about a woman’s dress"
+          },
+          {
+            "value": "Sherlock Holmes I believe” said she"
+          },
+          {
+            "value": "We know something of SaxeCoburg Square"
+          },
+          {
+            "value": "We soothed and comforted her by such words as we could find"
+          },
+          {
+            "value": "She impressed me neither favourably nor the reverse"
+          },
+          {
+            "value": "Now he looks a little more human"
+          },
+          {
+            "value": "What was this nocturnal expedition and why should I go armed"
+          },
+          {
+            "value": "You may know the strict principles of her family"
+          },
+          {
+            "value": "He was too good and kind to leave me so"
+          },
+          {
+            "value": "She used to be at the Allegro"
+          },
+          {
+            "value": "I snatched it up and examined it"
+          },
+          {
+            "value": "He has nerve and he has knowledge"
+          },
+          {
+            "value": "I’ll tell you first how I came to be in his power"
+          },
+          {
+            "value": "There it is in a nutshell"
+          },
+          {
+            "value": "In a hundred other ways he has helped him"
+          },
+          {
+            "value": "Just before nine o’clock Sherlock Holmes stepped briskly into the room"
+          },
+          {
+            "value": "I fainted dead away and I was very sick for months after"
+          },
+          {
+            "value": "She told him of the coronet"
+          },
+          {
+            "value": "I have been cut to the quick"
+          },
+          {
+            "value": "what a blind fool I have been"
+          },
+          {
+            "value": "Here is the first heading upon which I come"
+          },
+          {
+            "value": "Now look at that third name"
+          },
+          {
+            "value": "In the pocket is a cardcase"
+          },
+          {
+            "value": "He had turned his back so that none could see him but I"
+          },
+          {
+            "value": "There cannot be any missing’ said he"
+          },
+          {
+            "value": "Its disappearance however was but momentary"
+          },
+          {
+            "value": "At first it was but a lurid spark upon the stone pavement"
+          },
+          {
+            "value": "You do not know her but she has a soul of steel"
+          },
+          {
+            "value": "I did not gain very much however by my inspection"
+          },
+          {
+            "value": "It is most important all the same"
+          },
+          {
+            "value": "They will see that you are not there"
+          },
+          {
+            "value": "Clearly such a blow must have been struck from behind"
+          },
+          {
+            "value": "Would she not have made an admirable queen"
+          },
+          {
+            "value": "Sherlock Holmes sat up with a whistle"
+          },
+          {
+            "value": "The alarm of fire was admirably done"
+          },
+          {
+            "value": "Sherlock Holmes was already at breakfast when I came down"
+          },
+          {
+            "value": "It is in New Zealand stock paying 4½ per cent"
+          },
+          {
+            "value": "And the man who wrote the note is a German"
+          },
+          {
+            "value": "My mistress told me that you were likely to call"
+          },
+          {
+            "value": "I will leave the country sir"
+          },
+          {
+            "value": "We have boxed the compass among us"
+          },
+          {
+            "value": "He put less weight upon it"
+          },
+          {
+            "value": "This is only where we compress it"
+          },
+          {
+            "value": "But he could not help me in any way"
+          },
+          {
+            "value": "By it he laid the box of matches and the stump of a candle"
+          },
+          {
+            "value": "General Information About Project Gutenbergtm electronic works"
+          },
+          {
+            "value": "Of her I could see nothing"
+          },
+          {
+            "value": "Did she know where her husband was"
+          },
+          {
+            "value": "Oh Mr Holmes I wish you would do as much for me"
+          },
+          {
+            "value": "Prima donna Imperial Opera of Warsaw—yes"
+          },
+          {
+            "value": "Very few governesses in England are getting £ 100 a year"
+          },
+          {
+            "value": "There was no sign of a place whence it had been taken"
+          },
+          {
+            "value": "Then when I flash a light upon them close in swiftly"
+          },
+          {
+            "value": "No crime” said Sherlock Holmes laughing"
+          },
+          {
+            "value": "God keep you out of the clutches of such a man as he"
+          },
+          {
+            "value": "You have made two blunders in as many minutes"
+          },
+          {
+            "value": "This is my friend and colleague Dr Watson"
+          },
+          {
+            "value": "I had been warned against you months ago"
+          },
+          {
+            "value": "Then I asked him who Mr Duncan Ross was"
+          },
+          {
+            "value": "Was there a policestation anywhere near"
+          },
+          {
+            "value": "There was but one way for it"
+          },
+          {
+            "value": "But Holmes shook his head gravely"
+          },
+          {
+            "value": "I hardly looked at his face"
+          },
+          {
+            "value": "Only one man knew my secret"
+          },
+          {
+            "value": "My God what shall I do"
+          },
+          {
+            "value": "He has not been home for two days"
+          },
+          {
+            "value": "But if you are found again then all must come out"
+          },
+          {
+            "value": "She was very independent in little matters like that"
+          },
+          {
+            "value": "To Sherlock Holmes she is always _the_ woman"
+          },
+          {
+            "value": "If you leave you forfeit your whole position forever"
+          },
+          {
+            "value": "I have no doubt at all that he had left it there"
+          },
+          {
+            "value": "US laws alone swamp our small staff"
+          },
+          {
+            "value": "I knew that it was my sister’s voice"
+          },
+          {
+            "value": "At least that was my first impression"
+          },
+          {
+            "value": "Singularity is almost invariably a clue"
+          },
+          {
+            "value": "That however was out of the question"
+          },
+          {
+            "value": "Besides it is not I alone"
+          },
+          {
+            "value": "An ordinary man could not do it"
+          },
+          {
+            "value": "We shall then look thoroughly into the affair"
+          },
+          {
+            "value": "Perhaps I have trained myself to see what others overlook"
+          },
+          {
+            "value": "I think myself that it is a page from some private diary"
+          },
+          {
+            "value": "Was it all to go for nothing"
+          },
+          {
+            "value": "I have not come to stay” said I"
+          },
+          {
+            "value": "I did not know what to do"
+          },
+          {
+            "value": "But you know I have been trained as an actress myself"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "name": "MemeTextPlacement",
+        "version": "2",
+        "enumerationValues": [
+          {
+            "value": "top",
+            "synonyms": [
+              "top only",
+              "text on top"
+            ]
+          },
+          {
+            "value": "bottom",
+            "synonyms": [
+              "bottom only",
+              "text on bottom"
+            ]
+          },
+          {
+            "value": "both",
+            "synonyms": [
+              "top and bottom",
+              "bottom and top"
+            ]
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      }
+    ],
+    "voiceId": "0",
+    "childDirected": false,
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 180,
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, can you please repeat that?"
+        }
+      ],
+      "maxAttempts": 5
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I could not understand. Goodbye."
+        }
+      ]
+    }
+  }
+}

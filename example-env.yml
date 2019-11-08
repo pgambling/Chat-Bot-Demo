@@ -1,5 +1,6 @@
 complete:
-  LEX_BOT_NAME: "####"
-  LEX_BOT_ALIAS: "#####"
-  IMGFLIP_USERNAME: chatbotdemojsdaytest
-  IMGFLIP_PASSWORD: chatbotdemojsdaytest
+  LEX_BOT_NAME: ####
+  LEX_BOT_ALIAS: ####
+  IMGFLIP_USERNAME: ####
+  IMGFLIP_PASSWORD: ####
+  TELEGRAM_API_TOKEN: ####

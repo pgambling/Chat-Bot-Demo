@@ -15,11 +15,6 @@ provider:
         - "lex:PostText"
       Resource:
         - ${self:custom.lexBotArn}
-    - Effect: "Allow"
-      Action:
-        - "translate:TranslateText"
-        - "comprehend:DetectDominantLanguage"
-      Resource: "*"
 
 custom:
   stage: ${opt:stage, self:provider.stage}

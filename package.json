@@ -4,7 +4,7 @@
   "description": "Chat bot demonstration for JS Day Talk",
   "repository": "",
   "author": "Phil Gambling <phil.gambling@experoinc.com>",
-  "license": "PRIVATE",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "fuse.js": "^3.4.5",
