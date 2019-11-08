@@ -47,6 +47,12 @@ To update the lambda functions, run `sls deploy` or just `sls deploy -f <name of
 
 To update any of the Lex bot configuration, make changes via the Lex console in AWS.
 
+# Useful References
+
+- [Telegram Bot API](https://core.telegram.org/bots/api)
+- [Lex Input Event and Response Formats](https://docs.aws.amazon.com/lex/latest/dg/lambda-input-response-format.html)
+- [Serverless Guide for AWS](https://serverless.com/framework/docs/providers/aws/guide/)
+
 # Disclaimer
 
 I make no claims that any of the code in this project is production worthy and caution you to use at your own risk. It only serves as an example for learning purposes and starting point to build from.
